@@ -1,56 +1,114 @@
 # Odin CSS Exercises
 
-Archived fork of The Odin Project CSS exercises repository containing completed frontend layout and styling exercises.
+[![Static checks](https://img.shields.io/github/actions/workflow/status/itkrivoshei/odin-css-exercises/static-check.yml?branch=main&style=flat-square&label=static%20checks)](https://github.com/itkrivoshei/odin-css-exercises/actions/workflows/static-check.yml)
+[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
 
-## Overview
+Static HTML and CSS exercises based on The Odin Project CSS curriculum.
 
-This repository contains CSS-focused exercises completed as part of The Odin Project curriculum.
+## Tech stack
 
-The exercises cover core frontend styling concepts such as selectors, layout, spacing, Flexbox, CSS Grid, animation, and responsive design.
-
-This repository is kept public as part of my early frontend development learning history.
+- HTML
+- CSS
+- GitHub Actions for lightweight static checks
 
 ## Scope
 
-The exercises are organized into several sections:
+This repository contains small CSS practice exercises organized by topic:
 
-- Foundations — CSS selectors, cascade, grouping, chaining, and basic styling
-- Margin and Padding — spacing and box model practice
-- Flexbox — layout alignment, headers, modals, and page structures
-- Grid — CSS Grid layout exercises
-- Animation — hover states, transitions, and simple UI animation
+- `foundations/` — selectors, cascade, grouping, chaining, and basic styling
+- `margin-and-padding/` — spacing and box model exercises
+- `flex/` — Flexbox layout exercises
+- `grid/` — CSS Grid layout exercises
+- `animation/` — simple transition and animation exercises
 
-## Skills Demonstrated
+Some files come from the original course repository. Exercise implementations and cleanup changes are maintained in this fork.
 
-- HTML structure
-- CSS selectors and cascade
-- Box model fundamentals
-- Flexbox layouts
-- CSS Grid layouts
-- Responsive UI basics
-- Simple transitions and animations
-- Frontend problem solving through visual implementation
+## Run locally
 
-## Project Structure
+No installation or build step is required.
 
-    .
-    ├── animation/
-    ├── flex/
-    ├── foundations/
-    ├── grid/
-    ├── margin-and-padding/
-    ├── .github/
-    ├── .gitignore
-    └── README.md
+Clone the repository:
 
-## Notes
+```bash
+git clone https://github.com/itkrivoshei/odin-css-exercises.git
+cd odin-css-exercises
+```
 
-This is an archived educational fork from The Odin Project.
+Open any exercise `index.html` file directly in a browser, or serve the repository locally:
 
-Some files and instructions come from the original course repository. My work is represented through completed exercise implementations and related commits.
+```bash
+python3 -m http.server 8000
+```
 
-## Status
+Then open:
 
-This repository is archived and not actively maintained.
+```txt
+http://localhost:8000
+```
 
-It is kept public as an early frontend learning milestone before moving into modern frontend engineering and DevOps-focused work.
+## Verification
+
+The repository includes a GitHub Actions workflow that checks:
+
+- local stylesheet references in HTML files
+- generated local files such as `.DS_Store`, `Thumbs.db`, and log files
+
+Run the stylesheet reference check locally:
+
+```bash
+missing=0
+
+while IFS= read -r html_file; do
+  html_dir="$(dirname "$html_file")"
+
+  while IFS= read -r href; do
+    case "$href" in
+      http://*|https://*|//*|"")
+        continue
+        ;;
+    esac
+
+    css_path="$html_dir/$href"
+
+    if [ ! -f "$css_path" ]; then
+      echo "Missing stylesheet: $css_path referenced by $html_file"
+      missing=1
+    fi
+  done < <(grep -Eo 'href="[^"]+\.css"' "$html_file" | sed -E 's/^href="//; s/"$//')
+done < <(find . -type f -name '*.html' | sort)
+
+exit "$missing"
+```
+
+Check for generated local files:
+
+```bash
+find . \( -name ".DS_Store" -o -name "Thumbs.db" -o -name "*.log" \)
+```
+
+Expected output:
+
+```txt
+no output
+```
+
+## Project structure
+
+```txt
+.
+├── animation/
+├── flex/
+├── foundations/
+├── grid/
+├── margin-and-padding/
+├── .github/workflows/
+├── .gitignore
+├── LICENSE
+└── README.md
+```
+
+## License
+
+This repository is licensed under the [MIT License](LICENSE).
+
+The original exercise material is from [The Odin Project CSS exercises](https://github.com/TheOdinProject/css-exercises), which is also distributed under the MIT License.
