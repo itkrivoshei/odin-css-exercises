@@ -1,0 +1,55 @@
+name: Static checks
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+
+jobs:
+  verify:
+    name: Verify static files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Check local stylesheet references
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          missing=0
+
+          while IFS= read -r html_file; do
+            html_dir="$(dirname "$html_file")"
+
+            while IFS= read -r href; do
+              case "$href" in
+                http://*|https://*|//*|'')
+                  continue
+                  ;;
+              esac
+
+              css_path="$html_dir/$href"
+
+              if [ ! -f "$css_path" ]; then
+                echo "Missing stylesheet: $css_path referenced by $html_file"
+                missing=1
+              fi
+            done < <(grep -Eo 'href="[^"]+\.css"' "$html_file" | sed -E 's/^href="//; s/"$//')
+          done < <(find . -type f -name '*.html' | sort)
+
+          exit "$missing"
+
+      - name: Check for generated local files
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          if find . \( -name '.DS_Store' -o -name 'Thumbs.db' -o -name '*.log' \) | grep -q .; then
+            echo "Generated local files are committed."
+            find . \( -name '.DS_Store' -o -name 'Thumbs.db' -o -name '*.log' \)
+            exit 1
+          fi
