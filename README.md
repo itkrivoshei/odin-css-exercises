@@ -1,114 +1,63 @@
-# Odin CSS Exercises
+<div align="center">
 
-[![Static checks](https://img.shields.io/github/actions/workflow/status/itkrivoshei/odin-css-exercises/static-check.yml?branch=main&style=flat-square&label=static%20checks)](https://github.com/itkrivoshei/odin-css-exercises/actions/workflows/static-check.yml)
-[![License: MIT](https://img.shields.io/badge/license-MIT-blue.svg?style=flat-square)](LICENSE)
+# CSS Layout Collection
 
-Static HTML and CSS exercises based on The Odin Project CSS curriculum.
+Static HTML and CSS layouts covering selectors, spacing, Flexbox, Grid, and simple animation states.
 
-## Tech stack
+[![Static checks](https://img.shields.io/github/actions/workflow/status/itkrivoshei/odin-css-exercises/static-check.yml?branch=main&style=for-the-badge&label=static%20checks&logo=githubactions&logoColor=white)](https://github.com/itkrivoshei/odin-css-exercises/actions/workflows/static-check.yml)
+[![HTML](https://img.shields.io/badge/HTML-static-e34f26?style=for-the-badge&logo=html5&logoColor=white)](foundations)
+[![CSS](https://img.shields.io/badge/CSS-layouts-1572b6?style=for-the-badge&logo=css3&logoColor=white)](flex)
+[![License](https://img.shields.io/badge/license-MIT-blue?style=for-the-badge)](LICENSE)
 
-- HTML
-- CSS
-- GitHub Actions for lightweight static checks
+</div>
 
-## Scope
+## Catalog
 
-This repository contains small CSS practice exercises organized by topic:
+| Folder | Focus | Count |
+| --- | --- | --- |
+| `foundations/` | Selectors, cascade, grouping, chaining, descendant combinators | 6 |
+| `margin-and-padding/` | Box model and spacing | 2 |
+| `flex/` | Centering, headers, modal, page layouts | 7 |
+| `grid/` | Grid page compositions | 3 |
+| `animation/` | Hover and pop-up transitions | 2 |
 
-- `foundations/` — selectors, cascade, grouping, chaining, and basic styling
-- `margin-and-padding/` — spacing and box model exercises
-- `flex/` — Flexbox layout exercises
-- `grid/` — CSS Grid layout exercises
-- `animation/` — simple transition and animation exercises
+Each entry includes source HTML/CSS, expected visual assets, and a solution folder for comparison.
 
-Some files come from the original course repository. Exercise implementations and cleanup changes are maintained in this fork.
+## Run
 
-## Run locally
-
-No installation or build step is required.
-
-Clone the repository:
+No package install or build step is required.
 
 ```bash
 git clone https://github.com/itkrivoshei/odin-css-exercises.git
 cd odin-css-exercises
-```
-
-Open any exercise `index.html` file directly in a browser, or serve the repository locally:
-
-```bash
 python3 -m http.server 8000
 ```
 
-Then open:
+Open `http://localhost:8000` and browse to any folder, or open an `index.html` file directly.
 
-```txt
-http://localhost:8000
-```
+## Static Checks
 
-## Verification
+The workflow validates local stylesheet references and rejects generated local files such as `.DS_Store`, `Thumbs.db`, and log files.
 
-The repository includes a GitHub Actions workflow that checks:
-
-- local stylesheet references in HTML files
-- generated local files such as `.DS_Store`, `Thumbs.db`, and log files
-
-Run the stylesheet reference check locally:
-
-```bash
-missing=0
-
-while IFS= read -r html_file; do
-  html_dir="$(dirname "$html_file")"
-
-  while IFS= read -r href; do
-    case "$href" in
-      http://*|https://*|//*|"")
-        continue
-        ;;
-    esac
-
-    css_path="$html_dir/$href"
-
-    if [ ! -f "$css_path" ]; then
-      echo "Missing stylesheet: $css_path referenced by $html_file"
-      missing=1
-    fi
-  done < <(grep -Eo 'href="[^"]+\.css"' "$html_file" | sed -E 's/^href="//; s/"$//')
-done < <(find . -type f -name '*.html' | sort)
-
-exit "$missing"
-```
-
-Check for generated local files:
+Run a quick local generated-file check:
 
 ```bash
 find . \( -name ".DS_Store" -o -name "Thumbs.db" -o -name "*.log" \)
 ```
 
-Expected output:
+Expected output: no files.
 
-```txt
-no output
-```
+## Layout
 
-## Project structure
-
-```txt
-.
-├── animation/
-├── flex/
-├── foundations/
-├── grid/
-├── margin-and-padding/
-├── .github/workflows/
-├── .gitignore
-├── LICENSE
-└── README.md
+```text
+animation/
+flex/
+foundations/
+grid/
+margin-and-padding/
+.github/workflows/static-check.yml
 ```
 
 ## License
 
-This repository is licensed under the [MIT License](LICENSE).
-
-The original exercise material is from [The Odin Project CSS exercises](https://github.com/TheOdinProject/css-exercises), which is also distributed under the MIT License.
+[MIT](LICENSE)
